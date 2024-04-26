@@ -6,6 +6,11 @@
 			name: 'Four in a row',
 			description: 'AKA: Connect 4.',
 			href: '/four'
+		},
+		{
+			name: 'Checkers',
+			href: '/checkers',
+			description: 'Like chess, but easier to code.'
 		}
 	];
 </script>
@@ -23,5 +28,6 @@
 				{game.description}
 			</div>
 		</button>
+		<br /><br />
 	{/each}
 </div>
