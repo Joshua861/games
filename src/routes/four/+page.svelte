@@ -50,6 +50,7 @@
 		highlightedColumn = hilightedRow = -1;
 	}
 
+	let winningPieces: Array<Array<number>> = [];
 	function checkWin(): boolean {
 		// horizontal
 		for (let row = 0; row < 6; row++) {
@@ -61,6 +62,14 @@
 					p === board[col + 2][row] &&
 					p === board[col + 3][row]
 				) {
+					winningPieces = [
+						[col, row],
+						[col + 1, row],
+						[col + 2, row],
+						[col + 3, row]
+					];
+					console.log(winningPieces);
+
 					return true;
 				}
 			}
@@ -77,6 +86,12 @@
 					p === board[col][row + 2] &&
 					p === board[col][row + 3]
 				) {
+					winningPieces = [
+						[col, row],
+						[col, row + 1],
+						[col, row + 2],
+						[col, row + 3]
+					];
 					return true;
 				}
 			}
@@ -91,6 +106,12 @@
 					board[col][row] === board[col - 2][row + 2] &&
 					board[col][row] === board[col - 3][row + 3]
 				) {
+					winningPieces = [
+						[col, row],
+						[col - 1, row + 1],
+						[col - 2, row + 2],
+						[col - 3, row + 3]
+					];
 					return true;
 				}
 			}
@@ -105,6 +126,12 @@
 					board[col][row] === board[col + 2][row + 2] &&
 					board[col][row] === board[col + 3][row + 3]
 				) {
+					winningPieces = [
+						[col, row],
+						[col + 1, row + 1],
+						[col + 2, row + 2],
+						[col + 3, row + 3]
+					];
 					return true;
 				}
 			}
@@ -139,8 +166,8 @@
 
 <div
 	class="h-screen w-screen overflow-hidden
-{won && player ? 'bg-blue-400/20 dark:bg-blue-700/10' : ''} 
-  {won && !player ? 'bg-red-400/20 dark:bg-red-700/10' : ''}"
+	{won && player ? 'bg-sky-400/20 dark:bg-sky-700/20' : ''} 
+  {won && !player ? 'bg-rose-400/20 dark:bg-rose-700/20' : ''}"
 >
 	<a href="/" class="absolute">
 		<ChevronLeft size="64" class="p-3 opacity-90" />
@@ -156,13 +183,12 @@
 			{#each board as column, columnIndex}
 				<div class="flex flex-col">
 					{#each column as piece, rowIndex}
-						<div
+						<button
 							class="flex aspect-square p-2 transition-all sm:p-3 md:p-4
-		{piece}
-		{highlightedColumn === columnIndex && !won && player ? 'bg-sky-500/5' : ''}
-		{highlightedColumn === columnIndex && !won && !player ? 'bg-pink-500/5' : ''}
-		{rowIndex === 0 ? 'rounded-t-full' : ''}
-		{rowIndex === 5 ? 'rounded-b-full' : ''}"
+							{highlightedColumn === columnIndex && !won && player ? 'bg-sky-500/10' : ''}
+							{highlightedColumn === columnIndex && !won && !player ? 'bg-rose-500/10' : ''}
+							{rowIndex === 0 ? 'rounded-t-full' : ''}
+							{rowIndex === 5 ? 'rounded-b-full' : ''}"
 							on:mouseover={() => highlightColumn(columnIndex)}
 							on:mouseout={clearHighlight}
 							on:click={() => play(columnIndex)}
@@ -170,15 +196,24 @@
 							<div
 								class="h-full w-full rounded-full bg-background transition-all
 		{hilightedRow === rowIndex && !won && highlightedColumn === columnIndex && player
-									? 'bg-blue-500 opacity-50 ring-8 ring-blue-500/50'
+									? 'bg-blue-500 opacity-30 ring-8 ring-blue-500/50'
 									: ''}
               {hilightedRow === rowIndex && !won && highlightedColumn === columnIndex && !player
-									? 'bg-red-500 opacity-50 ring-8 ring-red-500/50'
+									? 'bg-red-500 opacity-30 ring-8 ring-red-500/50'
 									: ''}
               {piece === 'red' ? 'bg-red-500 ring-8 ring-red-500/50' : ''}
-              {piece === 'blue' ? 'bg-blue-500 ring-8 ring-blue-500/50' : ''}"
+              {piece === 'blue' ? 'bg-blue-500 ring-8 ring-blue-500/50' : ''}
+							{won == true &&
+								!winningPieces.some(
+									(winningPiece) => winningPiece[0] === columnIndex && winningPiece[1] === rowIndex
+								)
+									? 'opacity-30'
+									: ''}"
 							/>
-						</div>
+							<!-- <span class="absolute">
+								{JSON.stringify([columnIndex, rowIndex])}
+							</span> -->
+						</button>
 					{/each}
 				</div>
 			{/each}
