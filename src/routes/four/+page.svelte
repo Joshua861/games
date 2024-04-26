@@ -195,15 +195,15 @@
 						>
 							<div
 								class="h-full w-full rounded-full bg-background transition-all
-		{hilightedRow === rowIndex && !won && highlightedColumn === columnIndex && player
+								{hilightedRow === rowIndex && !won && highlightedColumn === columnIndex && player
 									? 'bg-blue-500 opacity-30 ring-8 ring-blue-500/50'
 									: ''}
-              {hilightedRow === rowIndex && !won && highlightedColumn === columnIndex && !player
+              	{hilightedRow === rowIndex && !won && highlightedColumn === columnIndex && !player
 									? 'bg-red-500 opacity-30 ring-8 ring-red-500/50'
 									: ''}
-              {piece === 'red' ? 'bg-red-500 ring-8 ring-red-500/50' : ''}
-              {piece === 'blue' ? 'bg-blue-500 ring-8 ring-blue-500/50' : ''}
-							{won == true &&
+              	{piece === 'red' ? 'bg-red-500 ring-8 ring-red-500/50' : ''}
+              	{piece === 'blue' ? 'bg-blue-500 ring-8 ring-blue-500/50' : ''}
+								{won == true &&
 								!winningPieces.some(
 									(winningPiece) => winningPiece[0] === columnIndex && winningPiece[1] === rowIndex
 								)
