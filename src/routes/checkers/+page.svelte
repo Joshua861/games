@@ -3,7 +3,7 @@
 	import { ChevronLeft, Crown } from 'lucide-svelte';
 	import { scale, fade } from 'svelte/transition';
 
-	type Tile = 'empty' | 'red' | 'blue' | 'red-king' | 'blue-king' | 'move-preview';
+	export type Tile = 'empty' | 'red' | 'blue' | 'red-king' | 'blue-king' | 'move-preview';
 	type Board = Array<Array<Tile>>;
 
 	let player: 'red' | 'blue' = 'red';
@@ -20,29 +20,29 @@
 		}
 
 		let blue: Array<Array<number>> = [
-			[1, 0],
-			[3, 0],
-			[5, 0],
-			[7, 0],
-			[0, 1],
-			[2, 1],
-			[4, 1],
-			[6, 1],
+			// [1, 0],
+			// [3, 0],
+			// [5, 0],
+			// [7, 0],
+			// [0, 1],
+			// [2, 1],
+			// [4, 1],
+			// [6, 1],
 			[1, 2],
 			[3, 2],
 			[5, 2],
 			[7, 2]
 		];
 		let red: Array<Array<number>> = [
-			[0, 5],
-			[2, 5],
-			[4, 5],
-			[6, 5],
-			[1, 6],
-			[3, 6],
-			[5, 6],
-			[7, 6],
-			[0, 7],
+			// [0, 5],
+			// [2, 5],
+			// [4, 5],
+			// [6, 5],
+			// [1, 6],
+			// [3, 6],
+			// [5, 6],
+			// [7, 6],
+			// [0, 7],
 			[2, 7],
 			[4, 7],
 			[6, 7]
@@ -58,19 +58,19 @@
 		return board;
 	}
 
-	function isPiece(piece: string | Tile) {
+	export function isPiece(piece: string | Tile) {
 		return ['red', 'blue', 'red-king', 'blue-king'].includes(`${piece}`);
 	}
 
-	function isRed(piece: string | Tile) {
+	export function isRed(piece: string | Tile) {
 		return ['red', 'red-king'].includes(piece);
 	}
 
-	function isBlue(piece: string | Tile) {
+	export function isBlue(piece: string | Tile) {
 		return ['blue', 'blue-king'].includes(piece);
 	}
 
-	function isKing(piece: string | Tile) {
+	export function isKing(piece: string | Tile) {
 		return ['blue-king', 'red-king'].includes(piece);
 	}
 
@@ -136,34 +136,26 @@
 
 		// Define the possible moves for a piece
 		let redMoves = [
-			// [x + 1, y + 1], // Down-right
 			[x + 1, y - 1], // Up-right
-			// [x - 1, y + 1], // Down-left
 			[x - 1, y - 1] // Up-left
 		];
 		let blueMoves = [
 			[x + 1, y + 1], // Down-right
-			// [x + 1, y - 1], // Up-right
 			[x - 1, y + 1] // Down-left
-			// [x - 1, y - 1] // Up-left
 		];
 		let redJumpMoves = [
-			// [x + 2, y + 2], // Down-right
 			[x + 2, y - 2], // Up-right
-			// [x - 2, y + 2], // Down-left
 			[x - 2, y - 2] // Up-left
 		];
 		let blueJumpMoves = [
 			[x + 2, y + 2], // Down-right
-			// [x + 2, y - 2], // Up-right
-			[x - 2, y + 2] // Down-left
-			// [x - 2, y - 2] // Up-left
+			[x - 2, y - 2] // Down-left
 		];
 		let allMoves = [
 			[x + 1, y + 1], // Down-right
 			[x + 1, y - 1], // Up-right
-			[x - 1, y + 1] // Down-left
-			// [x - 1, y - 1] // Up-left
+			[x - 1, y + 1], // Down-left
+			[x - 1, y - 1] // Up-left
 		];
 		let allJumpMoves = [
 			[x + 2, y + 2], // Down-right
@@ -173,7 +165,9 @@
 		];
 
 		let piece = board[pos.x][pos.y];
-		let team: string, moves: Array<Array<number>>, jumpMoves: Array<Array<number>>;
+		let team: string,
+			moves: Array<Array<number>> = allMoves,
+			jumpMoves: Array<Array<number>> = allJumpMoves;
 
 		if (isKing(piece)) {
 			moves = allMoves;
@@ -305,7 +299,7 @@
 >
 	<div class="my-auto aspect-square max-w-screen-md flex-1 overflow-auto p-5">
 		<!--how can i align this horizonally? -->
-		<div class="grid grid-cols-8 rounded-2xl border-4 border-sky-500/20">
+		<div class="grid grid-cols-8 rounded-2xl border-4 border-foreground/20">
 			{#each board as row, rowIndex}
 				<div class="flex flex-col">
 					{#each row as piece, columnIndex}
