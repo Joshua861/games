@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { ChevronLeft } from 'lucide-svelte';
+	import { ChevronLeft, Crown } from 'lucide-svelte';
 	import { scale, fade } from 'svelte/transition';
 
 	type Tile = 'empty' | 'red' | 'blue' | 'red-king' | 'blue-king' | 'move-preview';
@@ -70,6 +70,10 @@
 		return ['blue', 'blue-king'].includes(piece);
 	}
 
+	function isKing(piece: string | Tile) {
+		return ['blue-king', 'red-king'].includes(piece);
+	}
+
 	function clearPreviews() {
 		for (let x = 0; x < 8; x++) {
 			for (let y = 0; y < 8; y++) {
@@ -114,30 +118,76 @@
 		}
 	}
 
+	function checkPromotion() {
+		for (let x = 0; x < 8; x++) {
+			for (let y = 0; y < 8; y++) {
+				let piece = board[x][y];
+				if (y === 0 && isRed(piece)) {
+					board[x][y] = 'red-king';
+				} else if (y === 7 && isBlue(piece)) {
+					board[x][y] = 'blue-king';
+				}
+			}
+		}
+	}
+
 	function showMoves(pos: any) {
 		let { x, y } = pos;
 
 		// Define the possible moves for a piece
-		let moves = [
-			[x + 1, y + 1], // Up-right
-			[x + 1, y - 1], // Down-right
-			[x - 1, y + 1], // Up-left
-			[x - 1, y - 1] // Down-left
+		let redMoves = [
+			// [x + 1, y + 1], // Down-right
+			[x + 1, y - 1], // Up-right
+			// [x - 1, y + 1], // Down-left
+			[x - 1, y - 1] // Up-left
 		];
-		let jumpMoves = [
-			[x + 2, y + 2], // Up-right
-			[x + 2, y - 2], // Down-right
-			[x - 2, y + 2], // Up-left
-			[x - 2, y - 2] // Down-left
+		let blueMoves = [
+			[x + 1, y + 1], // Down-right
+			// [x + 1, y - 1], // Up-right
+			[x - 1, y + 1] // Down-left
+			// [x - 1, y - 1] // Up-left
+		];
+		let redJumpMoves = [
+			// [x + 2, y + 2], // Down-right
+			[x + 2, y - 2], // Up-right
+			// [x - 2, y + 2], // Down-left
+			[x - 2, y - 2] // Up-left
+		];
+		let blueJumpMoves = [
+			[x + 2, y + 2], // Down-right
+			// [x + 2, y - 2], // Up-right
+			[x - 2, y + 2] // Down-left
+			// [x - 2, y - 2] // Up-left
+		];
+		let allMoves = [
+			[x + 1, y + 1], // Down-right
+			[x + 1, y - 1], // Up-right
+			[x - 1, y + 1] // Down-left
+			// [x - 1, y - 1] // Up-left
+		];
+		let allJumpMoves = [
+			[x + 2, y + 2], // Down-right
+			[x + 2, y - 2], // Up-right
+			[x - 2, y + 2], // Down-left
+			[x - 2, y - 2] // Up-left
 		];
 
 		let piece = board[pos.x][pos.y];
-		let team: string;
+		let team: string, moves: Array<Array<number>>, jumpMoves: Array<Array<number>>;
 
-		if (isRed(piece)) {
-			team = 'red';
-		} else if (isBlue(piece)) {
-			team = 'blue';
+		if (isKing(piece)) {
+			moves = allMoves;
+			jumpMoves = allJumpMoves;
+		} else {
+			if (isRed(piece)) {
+				team = 'red';
+				jumpMoves = redJumpMoves;
+				moves = redMoves;
+			} else if (isBlue(piece)) {
+				moves = blueMoves;
+				jumpMoves = blueJumpMoves;
+				team = 'blue';
+			}
 		}
 
 		// Filter out moves that are out of bounds or not empty
@@ -230,6 +280,7 @@
 		board[prev.x][prev.y] = 'empty';
 		board[next.x][next.y] = piece;
 
+		checkPromotion();
 		checkWin();
 		console.log(prev, next, piece);
 		switchPlayer();
@@ -278,14 +329,22 @@
 							<div
 								class="piece aspect-square [&>*]:transition-all [&>*]:hover:ring-4 [&>*]:hover:ring-zinc-500/50"
 							>
-								{#if piece == 'red'}
+								{#if isRed(piece)}
 									<div class="h-full w-full rounded-full bg-red-500">
-										<div class="h-full w-full scale-75 rounded-full bg-red-600/60"></div>
+										<div class="h-full w-full scale-75 rounded-full bg-red-600/60">
+											{#if isKing(piece)}
+												<Crown class="h-full w-full p-[1vw] text-background/20" />
+											{/if}
+										</div>
 									</div>
 								{/if}
-								{#if piece == 'blue'}
+								{#if isBlue(piece)}
 									<div class="h-full w-full rounded-full bg-cyan-600">
-										<div class="h-full w-full scale-75 rounded-full bg-cyan-700/60"></div>
+										<div class="h-full w-full scale-75 rounded-full bg-cyan-700/60">
+											{#if isKing(piece)}
+												<Crown class="h-full w-full p-[1vw] text-background/20" />
+											{/if}
+										</div>
 									</div>
 								{/if}
 								{#if piece == 'move-preview'}
