@@ -3,7 +3,7 @@
 	import { ChevronLeft, Crown } from 'lucide-svelte';
 	import { scale, fade } from 'svelte/transition';
 
-	export type Tile = 'empty' | 'red' | 'blue' | 'red-king' | 'blue-king' | 'move-preview';
+	type Tile = 'empty' | 'red' | 'blue' | 'red-king' | 'blue-king' | 'move-preview';
 	type Board = Array<Array<Tile>>;
 
 	let player: 'red' | 'blue' = 'red';
