@@ -10,7 +10,7 @@
 		{
 			name: 'Checkers',
 			href: '/checkers',
-			description: 'Like chess, but easier to code.'
+			description: 'Like chess, but easier to code. (BROKEN RN)'
 		}
 	];
 </script>
